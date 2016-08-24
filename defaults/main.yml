@@ -3,3 +3,4 @@
 systemd_journal_rsyslog_package_state: present
 systemd_journal_system_max_use: 500M
 systemd_journal_system_max_file_size: 50M
+systemd_journal_restart_state: "started"
