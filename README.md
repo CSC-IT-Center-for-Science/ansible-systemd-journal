@@ -24,7 +24,7 @@ Role Variables
 --------------
 
     vars:
-      - systemd_journal_rsyslog_package_state: absent
+      - systemd_journal_rsyslog_package_state: present
       - systemd_journal_system_max_use: 500M
       - systemd_journal_system_max_file_size: 50M
 
@@ -34,7 +34,7 @@ old logs if other data fills a disk. That's not very friendly for SSD drives so
 customise it to.
 
 The `systemd_journal_rsyslog_package_state` variable can be `absent` or
-`present` and if absent (the default) the rsyslog package will be removed.
+`present` and if absent (not the default) the rsyslog package will be removed.
 
 Dependencies
 ------------
