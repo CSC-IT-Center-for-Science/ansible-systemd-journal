@@ -1,26 +1,31 @@
 ---
 
-- name: enable the journal for logging
-  file: state=directory mode=2755 owner=root group=systemd-journal path=/var/log/journal
+- name: rsyslog package {{ systemd_journal_rsyslog_package_state }}
+  yum:
+    name: rsyslog
+    state: "{{ systemd_journal_rsyslog_package_state }}"
+
+- name: create directory for persistent journal storage
+  file:
+    state: directory
+    mode: 02755
+    owner: root
+    group: systemd-journal
+    path: /var/log/journal
+  when: systemd_journal_create_directory
   notify:
    - restart journald
 
-- name: (remove) the rsyslog package
-  yum: name=rsyslog state={{ systemd_journal_rsyslog_package_state }}
-
-- name: limit the total size of journald logs
-  lineinfile:
-    dest: /etc/systemd/journald.conf
-    regexp: ^SystemMaxUse=
-    line: SystemMaxUse={{ systemd_journal_system_max_use }}
+- name: set configuration parameters in journald config
+  ini_file:
+    path: "{{ systemd_journal_configuration_file }}"
+    owner: root
+    group: root
+    mode: 0644
+    no_extra_spaces: yes
+    section: Journal
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+  loop: "{{ lookup('dict', systemd_journal_configuration) }}"
   notify:
    - restart journald
-
-- name: limit the size of each journald log file
-  lineinfile:
-    dest: /etc/systemd/journald.conf
-    regexp: ^SystemMaxFileSize=
-    line: SystemMaxFileSize={{ systemd_journal_system_max_file_size }}
-  notify:
-   - restart journald
-
