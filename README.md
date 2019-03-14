@@ -3,38 +3,43 @@
 systemd-journal
 ========
 
-An [ansible role](https://galaxy.ansibleworks.com/list#/roles/221) to configure
-the systemd [journal](http://0pointer.de/blog/projects/systemctl-journal.html)
+An [ansible role](https://galaxy.ansible.com/cscfi/systemd-journal) to configure
+the systemd [journal](https://www.freedesktop.org/software/systemd/man/systemd-journald.service.html)
+via [journald.conf](https://www.freedesktop.org/software/systemd/man/journald.conf.html)
 to handle all logging and more tightly limit it's log storage, suitable for an
 SSD on a laptop.
 
-This role will remove the rsyslog package on F19 (already the default on F20)
-unless you tell it otherwise.
 
     ---
     - hosts: localhost
 
       roles:
-        - groks.systemd-journal
+        - cscfi.systemd-journal
 
 Requirements
 ------------
 
-A recent version of [Fedora](https://fedoraproject.org/get-fedora) Linux.
+Any systemd distribution.
 
 Role Variables
 --------------
 
     vars:
+      - systemd_journal_create_directory: True
       - systemd_journal_rsyslog_package_state: present
+      - systemd_journal_storage: auto
+      - systemd_journal_compress: yes
       - systemd_journal_system_max_use: 500M
       - systemd_journal_system_max_file_size: 50M
+      - systemd_journal_max_retention_sec: 0
       - systemd_journal_restart_state: started
 
 The journal will be default use as much free space as it can get and then delete
 old logs if other data fills a disk. That's not very friendly for SSD drives so
 `systemd_journal_system_max_use` limits this to 500M by defaut, or whatever you
 customise it to.
+
+If you want to set custom options not directly supported by this role you can also overwrite systemd_journal_configuration directly.
 
 The `systemd_journal_rsyslog_package_state` variable can be `absent` or
 `present` and if absent (not the default) the rsyslog package will be removed.

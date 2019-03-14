@@ -1,6 +1,17 @@
 ---
 
+systemd_journal_create_directory: True
 systemd_journal_rsyslog_package_state: present
+systemd_journal_configuration_file: /etc/systemd/journald.conf
+systemd_journal_storage: auto
+systemd_journal_compress: "yes"
 systemd_journal_system_max_use: 500M
 systemd_journal_system_max_file_size: 50M
+systemd_journal_max_retention_sec: 0
 systemd_journal_restart_state: "started"
+systemd_journal_configuration:
+  Storage: "{{ systemd_journal_storage }}"
+  Compress: "{{ systemd_journal_compress }}"
+  SystemMaxUse: "{{ systemd_journal_system_max_use }}"
+  SystemMaxFileSize: "{{ systemd_journal_system_max_file_size }}"
+  MaxRetentionSec: "{{ systemd_journal_max_retention_sec }}"
