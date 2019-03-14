@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/CSCfi/ansible-systemd-journal.svg?branch=master)](https://travis-ci.com/CSCfi/ansible-systemd-journal)
+
 systemd-journal
 ========
 
